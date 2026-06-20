@@ -38,11 +38,14 @@ jobs:
           head -c 300 maxroll_raw.txt | tr '\n' ' ' >> maxroll_fetch_info.txt
           echo >> maxroll_fetch_info.txt
 
-      - name: Decode PoB export to XML
+      - name: Decode and inspect PoB export
         shell: bash
         run: |
           python - <<'PY'
-          import base64, zlib
+          import base64
+          import re
+          import zlib
+          import xml.etree.ElementTree as ET
           from xml.dom import minidom
 
           code = open('maxroll_raw.txt', encoding='utf-8').read().strip()
@@ -51,7 +54,97 @@ jobs:
           xml = zlib.decompress(payload).decode('utf-8')
           pretty = minidom.parseString(xml).toprettyxml(indent='  ')
           open('maxroll_build.xml', 'w', encoding='utf-8').write(pretty)
+
+          root = ET.fromstring(xml)
+          out = []
+          out.append('ROOT SECTIONS')
+          for child in root:
+              out.append(f'- {child.tag}: children={len(child)} attrs={child.attrib}')
+
+          out.append('\nSPIRIT PLAYER STATS')
+          for elem in root.findall('.//PlayerStat'):
+              if 'Spirit' in elem.attrib.get('stat', ''):
+                  out.append(str(elem.attrib))
+
+          out.append('\nALL SPIRIT / CHARM / RESERVATION OCCURRENCES')
+          keywords = re.compile(r'spirit|charm|reserv', re.I)
+          for elem in root.iter():
+              text = ' '.join(''.join(elem.itertext()).split())
+              attrs = ' '.join(f'{k}={v}' for k, v in elem.attrib.items())
+              own_text = (elem.text or '').strip()
+              searchable = f'{elem.tag} {attrs} {own_text}'
+              if keywords.search(searchable):
+                  out.append(f'<{elem.tag}> attrs={elem.attrib} text={own_text!r}')
+
+          items = root.find('Items')
+          out.append('\nITEM SECTION CHILDREN')
+          if items is None:
+              out.append('No <Items> section')
+          else:
+              for child in items:
+                  if child.tag != 'Item':
+                      out.append(f'<{child.tag}> attrs={child.attrib} text={(child.text or "").strip()!r}')
+
+              item_map = {}
+              for item in items.findall('Item'):
+                  item_id = item.attrib.get('id', '?')
+                  text = (item.text or '').strip('\n')
+                  item_map[item_id] = text
+
+              slot_map = {}
+              for elem in items.iter():
+                  item_id = elem.attrib.get('itemId')
+                  if item_id:
+                      slot_map.setdefault(item_id, []).append(f'{elem.tag}:{elem.attrib}')
+
+              out.append('\nEQUIPPED ITEM BLOCKS')
+              equipped_ids = set(slot_map)
+              for item_id in sorted(equipped_ids, key=lambda x: int(x) if x.isdigit() else 999999):
+                  out.append(f'=== ITEM {item_id} / {" | ".join(slot_map[item_id])} ===')
+                  out.append(item_map.get(item_id, '[missing item text]'))
+
+              out.append('\nITEMS CONTAINING SPIRIT OR CHARM')
+              for item_id, text in item_map.items():
+                  if re.search(r'spirit|charm', text, re.I):
+                      out.append(f'=== ITEM {item_id} / {" | ".join(slot_map.get(item_id, []))} ===')
+                      out.append(text)
+
+          out.append('\nENABLED SKILL GROUPS')
+          skills = root.find('Skills')
+          if skills is None:
+              out.append('No <Skills> section')
+          else:
+              active_set = skills.attrib.get('activeSkillSet')
+              out.append(f'Skills attrs={skills.attrib}; activeSkillSet={active_set}')
+              for set_elem in skills.findall('SkillSet'):
+                  out.append(f'--- SkillSet {set_elem.attrib} ---')
+                  for index, skill in enumerate(set_elem.findall('Skill'), 1):
+                      if skill.attrib.get('enabled', 'true') == 'false':
+                          continue
+                      gems = []
+                      for gem in skill.findall('Gem'):
+                          if gem.attrib.get('enabled', 'true') != 'false':
+                              gems.append(
+                                  f"{gem.attrib.get('nameSpec')} [skillId={gem.attrib.get('skillId')}; "
+                                  f"variantId={gem.attrib.get('variantId')}; level={gem.attrib.get('level')}; "
+                                  f"quality={gem.attrib.get('quality')}]"
+                              )
+                      if gems:
+                          out.append(f'Group {index}: ' + ' -> '.join(gems))
+
+          out.append('\nCONFIG INPUTS CONTAINING SPIRIT OR CHARM')
+          for inp in root.findall('.//Input'):
+              data = ' '.join(inp.attrib.values())
+              if re.search(r'spirit|charm', data, re.I):
+                  out.append(str(inp.attrib))
+
+          out.append('\nTREE SPECS')
+          for spec in root.findall('.//Spec'):
+              out.append(str(spec.attrib))
+
+          open('maxroll_spirit_extract.txt', 'w', encoding='utf-8').write('\n'.join(out))
           print('decoded xml bytes:', len(pretty.encode('utf-8')))
+          print('extract bytes:', len('\n'.join(out).encode('utf-8')))
           PY
 
       - name: Commit fetched data
@@ -59,6 +152,6 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add maxroll_raw.txt maxroll_headers.txt maxroll_fetch_info.txt maxroll_build.xml
-          git commit -m 'Fetch and decode Maxroll PoB data [skip ci]' || exit 0
+          git add maxroll_raw.txt maxroll_headers.txt maxroll_fetch_info.txt maxroll_build.xml maxroll_spirit_extract.txt
+          git commit -m 'Fetch, decode, and inspect Maxroll PoB data [skip ci]' || exit 0
           git push
