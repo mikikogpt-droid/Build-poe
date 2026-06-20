@@ -38,11 +38,27 @@ jobs:
           head -c 300 maxroll_raw.txt | tr '\n' ' ' >> maxroll_fetch_info.txt
           echo >> maxroll_fetch_info.txt
 
+      - name: Decode PoB export to XML
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, zlib
+          from xml.dom import minidom
+
+          code = open('maxroll_raw.txt', encoding='utf-8').read().strip()
+          code += '=' * (-len(code) % 4)
+          payload = base64.urlsafe_b64decode(code)
+          xml = zlib.decompress(payload).decode('utf-8')
+          pretty = minidom.parseString(xml).toprettyxml(indent='  ')
+          open('maxroll_build.xml', 'w', encoding='utf-8').write(pretty)
+          print('decoded xml bytes:', len(pretty.encode('utf-8')))
+          PY
+
       - name: Commit fetched data
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add maxroll_raw.txt maxroll_headers.txt maxroll_fetch_info.txt
-          git commit -m 'Fetch Maxroll PoB data [skip ci]' || exit 0
+          git add maxroll_raw.txt maxroll_headers.txt maxroll_fetch_info.txt maxroll_build.xml
+          git commit -m 'Fetch and decode Maxroll PoB data [skip ci]' || exit 0
           git push
