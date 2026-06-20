@@ -1,0 +1,93 @@
+name: Debug PoB Spirit
+
+on:
+  push:
+    branches:
+      - tmp-maxroll-reader-5o3s6z0w
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  calculate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clone PoB2
+        run: git clone --depth 1 https://github.com/PathOfBuildingCommunity/PathOfBuilding-PoE2.git pob2
+
+      - name: Run headless calculation without failing job
+        shell: bash
+        run: |
+          cat > inspect_spirit.lua <<'LUA'
+          dofile('HeadlessWrapper.lua')
+          local f = assert(io.open('/input/maxroll_build.xml', 'rb'))
+          local xmlText = f:read('*a')
+          f:close()
+          loadBuildFromXML(xmlText, 'maxroll-5o3s6z0w')
+          for _ = 1, 20 do runCallback('OnFrame') end
+
+          print('BUILD class=' .. tostring(build.className) .. ' ascendancy=' .. tostring(build.ascendClassName) .. ' level=' .. tostring(build.characterLevel))
+          local env = build.calcsTab.mainEnv or build.calcsTab.calcsEnv
+          if not env or not env.player then
+            print('NO CALC ENV')
+            return
+          end
+          local actor = env.player
+          print('Spirit=' .. tostring(actor.output.Spirit))
+          print('SpiritReserved=' .. tostring(actor.output.SpiritReserved))
+          print('SpiritUnreserved=' .. tostring(actor.output.SpiritUnreserved))
+          print('CharmSlots=' .. tostring(actor.output.CharmSlots))
+          print('EmptyCharmSlots=' .. tostring(actor.output.EmptyCharmSlots))
+
+          for _, modType in ipairs({'BASE','INC','MORE','OVERRIDE'}) do
+            local rows = actor.modDB:Tabulate(modType, nil, 'Spirit')
+            print('=== ' .. modType .. ' Spirit count=' .. tostring(#rows) .. ' combine=' .. tostring(actor.modDB:Combine(modType, nil, 'Spirit')) .. ' ===')
+            for _, row in ipairs(rows) do
+              local m = row.mod
+              print(string.format('value=%s name=%s type=%s source=%s', tostring(row.value), tostring(m.name), tostring(m.type), tostring(m.source)))
+            end
+          end
+
+          print('=== MODS MATCHING SPIRIT/CHARM/RESERV ===')
+          local seen = {}
+          local function scan(store, label)
+            if type(store) ~= 'table' or seen[store] then return end
+            seen[store] = true
+            for _, m in ipairs(store) do
+              local hay = (tostring(m.name or '') .. ' ' .. tostring(m.source or '')):lower()
+              if hay:find('spirit',1,true) or hay:find('charm',1,true) or hay:find('reserv',1,true) then
+                print(string.format('%s value=%s name=%s type=%s source=%s', label, tostring(m.value), tostring(m.name), tostring(m.type), tostring(m.source)))
+              end
+            end
+            scan(store.parent, label .. '.parent')
+          end
+          scan(actor.modDB, 'modDB')
+          LUA
+
+          set +e
+          docker run --rm \
+            -e HOME=/tmp \
+            -e CI= \
+            -v "$PWD/pob2:/workdir" \
+            -v "$PWD/maxroll_build.xml:/input/maxroll_build.xml:ro" \
+            -v "$PWD/inspect_spirit.lua:/input/inspect_spirit.lua:ro" \
+            -w /workdir/src \
+            ghcr.io/pathofbuildingcommunity/pathofbuilding-tests:latest \
+            luajit /input/inspect_spirit.lua > pob_spirit_debug.txt 2>&1
+          status=$?
+          echo "EXIT_STATUS=$status" >> pob_spirit_debug.txt
+          set -e
+          tail -n 200 pob_spirit_debug.txt
+
+      - name: Commit debug output
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pob_spirit_debug.txt
+          git commit -m 'Store PoB Spirit debug output [skip ci]' || exit 0
+          git push
