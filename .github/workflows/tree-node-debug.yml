@@ -1,0 +1,70 @@
+name: Extract Spirit Passive Nodes
+
+on:
+  push:
+    branches:
+      - tmp-maxroll-reader-5o3s6z0w
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone PoB2 and inspect tree data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/PathOfBuildingCommunity/PathOfBuilding-PoE2.git pob2
+          {
+            echo '=== TREE FILES ==='
+            find pob2/src/TreeData -maxdepth 3 -type f -printf '%p %s bytes\n' | sort
+            echo
+            echo '=== FILE TYPES ==='
+            find pob2/src/TreeData -maxdepth 3 -type f -print0 | xargs -0 file
+            echo
+            echo '=== GREP SPIRIT ==='
+            grep -Rni --binary-files=text -E 'increased Spirit|to Spirit|Spirit' pob2/src/TreeData pob2/src/Data 2>/dev/null | head -n 1000 || true
+            echo
+            echo '=== GREP SELECTED NODE IDS ==='
+            for id in 47359 16121 45319 51891 56933 10131 21984 11248 17584 50084 54521 51934 61056 4828 57513 26196 1506 24786 45632 32194 15775 4140 49976 50104 11825 2335 50558 25304 36379 59362 31977 27705 33722 12430 12462 51741 904 38493 57710 46882 3251 28446 49938 59093 47931 50423 63400 54984 28578 48773 2582 43281 32951 57821 17517 62677 16204 47976 33180 17711 56334 14446 61525 30808 30657 33824 7960 58312 32763 24721 65493 48116 11741 29959 16466 60269 50216 26135 17655 61421 24287 49357 25429 46989 46819 44669 43854 38537 8616 41394 40783 20467 39280 6891 61834 59538 40453 49497 50816 28022 55621 38103 33781 3567 30834 23364 13233 50498 31765 41753 60735 56265 21568 38463 62936 8831 29240 40399 61419 62523 5314 28002 34015 25503 46554 23382 19044 29009 25026 722 35535 1855 14267 10159 41838 45885 42253 43633 27068 17702 47168 27388 64299 54512 11838 23040 61403 38856 23244 14231 55048 39131 35831 6898 13407; do
+              grep -Rni --binary-files=text -E "(^|[^0-9])${id}([^0-9]|$)" pob2/src/TreeData 2>/dev/null | head -n 20 || true
+            done
+          } > tree_node_debug.txt
+
+          python - <<'PY'
+          import os, json, re, gzip, zlib, base64
+          root='pob2/src/TreeData'
+          out=[]
+          for dp, _, fs in os.walk(root):
+              for fn in fs:
+                  p=os.path.join(dp,fn)
+                  try:
+                      b=open(p,'rb').read()
+                  except Exception as e:
+                      continue
+                  out.append(f'{p}: size={len(b)} head={b[:100]!r}')
+                  if b and (b[:1] in (b'{',b'[') or fn.endswith(('.json','.lua'))):
+                      try:
+                          text=b.decode('utf-8','replace')
+                          if '16204' in text or 'Spirit' in text:
+                              out.append('  MATCH 16204/Spirit')
+                              for m in re.finditer(r'.{0,300}(?:16204|Spirit).{0,500}', text, re.I|re.S):
+                                  out.append(m.group(0)[:1000])
+                      except Exception:
+                          pass
+          open('tree_node_python_debug.txt','w',encoding='utf-8').write('\n'.join(out))
+          PY
+
+      - name: Commit extraction
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tree_node_debug.txt tree_node_python_debug.txt
+          git commit -m 'Store passive tree Spirit extraction [skip ci]' || exit 0
+          git push
