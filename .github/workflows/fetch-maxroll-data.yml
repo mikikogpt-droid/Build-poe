@@ -1,0 +1,107 @@
+name: Fetch Maxroll Raw Data
+
+on:
+  push:
+    branches:
+      - tmp-maxroll-reader-5o3s6z0w
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch and decode Maxroll PoB
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://maxroll.gg/poe2/api/pob/5o3s6z0w'
+          curl -fsSL --retry 3 --connect-timeout 20 --max-time 120 \
+            -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36' \
+            "$URL" -o maxroll_raw.txt
+
+          python - <<'PY'
+          import base64
+          import re
+          import zlib
+          import xml.etree.ElementTree as ET
+          from xml.dom import minidom
+
+          code = open('maxroll_raw.txt', encoding='utf-8').read().strip()
+          code += '=' * (-len(code) % 4)
+          xml = zlib.decompress(base64.urlsafe_b64decode(code)).decode('utf-8')
+          pretty = minidom.parseString(xml).toprettyxml(indent='  ')
+          open('maxroll_build.xml', 'w', encoding='utf-8').write(pretty)
+
+          root = ET.fromstring(xml)
+          lines = []
+          build = root.find('Build')
+          lines.append('BUILD ATTRIBUTES')
+          lines.append(repr(build.attrib if build is not None else {}))
+
+          lines.append('\nPLAYER STATS')
+          if build is not None:
+              for stat in build.findall('PlayerStat'):
+                  lines.append(repr(stat.attrib))
+
+          lines.append('\nALL ELEMENTS MATCHING SPIRIT / RESERV / RUNE / CHARM')
+          pattern = re.compile(r'spirit|reserv|rune|charm', re.I)
+          for elem in root.iter():
+              text = (elem.text or '').strip()
+              searchable = ' '.join([elem.tag, *[f'{k}={v}' for k, v in elem.attrib.items()], text])
+              if pattern.search(searchable):
+                  lines.append(f'<{elem.tag}> attrs={elem.attrib} text={text!r}')
+
+          items = root.find('Items')
+          if items is not None:
+              lines.append('\nITEMS ATTRIBUTES')
+              lines.append(repr(items.attrib))
+              item_map = {item.attrib.get('id', '?'): (item.text or '').strip('\n') for item in items.findall('Item')}
+              slot_map = {}
+              for elem in items.iter():
+                  iid = elem.attrib.get('itemId')
+                  if iid:
+                      slot_map.setdefault(iid, []).append(f'{elem.tag}:{elem.attrib}')
+              lines.append('\nEQUIPPED ITEMS')
+              for iid in sorted(slot_map, key=lambda x: int(x) if x.isdigit() else 999999):
+                  lines.append(f'=== ITEM {iid} / {" | ".join(slot_map[iid])} ===')
+                  lines.append(item_map.get(iid, '[missing item]'))
+              lines.append('\nALL ITEMS MATCHING SPIRIT / RESERV / RUNE / CHARM')
+              for iid, text in item_map.items():
+                  if pattern.search(text):
+                      lines.append(f'=== ITEM {iid} / {" | ".join(slot_map.get(iid, []))} ===')
+                      lines.append(text)
+
+          skills = root.find('Skills')
+          if skills is not None:
+              lines.append('\nSKILLS ATTRIBUTES')
+              lines.append(repr(skills.attrib))
+              for sset in skills.findall('SkillSet'):
+                  lines.append(f'--- SKILL SET {sset.attrib} ---')
+                  for skill in sset.findall('Skill'):
+                      lines.append(f'Skill attrs={skill.attrib}')
+                      for gem in skill.findall('Gem'):
+                          lines.append(f'  Gem attrs={gem.attrib}')
+
+          lines.append('\nTREE SPECS')
+          for spec in root.findall('.//Spec'):
+              lines.append(repr(spec.attrib))
+
+          open('maxroll_extract.txt', 'w', encoding='utf-8').write('\n'.join(lines))
+          print('raw bytes:', len(code))
+          print('xml bytes:', len(xml.encode('utf-8')))
+          PY
+
+      - name: Commit extracted data
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add maxroll_raw.txt maxroll_build.xml maxroll_extract.txt
+          git commit -m 'Store Maxroll PoB data for Spirit analysis [skip ci]' || exit 0
+          git push
