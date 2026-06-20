@@ -38,7 +38,7 @@ jobs:
           head -c 300 maxroll_raw.txt | tr '\n' ' ' >> maxroll_fetch_info.txt
           echo >> maxroll_fetch_info.txt
 
-      - name: Decode and inspect PoB export
+      - name: Decode and inspect PoB XML
         shell: bash
         run: |
           python - <<'PY'
@@ -69,28 +69,14 @@ jobs:
           out.append('\nALL SPIRIT / CHARM / RESERVATION OCCURRENCES')
           keywords = re.compile(r'spirit|charm|reserv', re.I)
           for elem in root.iter():
-              text = ' '.join(''.join(elem.itertext()).split())
-              attrs = ' '.join(f'{k}={v}' for k, v in elem.attrib.items())
               own_text = (elem.text or '').strip()
-              searchable = f'{elem.tag} {attrs} {own_text}'
+              searchable = f"{elem.tag} {' '.join(f'{k}={v}' for k, v in elem.attrib.items())} {own_text}"
               if keywords.search(searchable):
                   out.append(f'<{elem.tag}> attrs={elem.attrib} text={own_text!r}')
 
           items = root.find('Items')
-          out.append('\nITEM SECTION CHILDREN')
-          if items is None:
-              out.append('No <Items> section')
-          else:
-              for child in items:
-                  if child.tag != 'Item':
-                      out.append(f'<{child.tag}> attrs={child.attrib} text={(child.text or "").strip()!r}')
-
-              item_map = {}
-              for item in items.findall('Item'):
-                  item_id = item.attrib.get('id', '?')
-                  text = (item.text or '').strip('\n')
-                  item_map[item_id] = text
-
+          if items is not None:
+              item_map = {item.attrib.get('id', '?'): (item.text or '').strip('\n') for item in items.findall('Item')}
               slot_map = {}
               for elem in items.iter():
                   item_id = elem.attrib.get('itemId')
@@ -98,24 +84,14 @@ jobs:
                       slot_map.setdefault(item_id, []).append(f'{elem.tag}:{elem.attrib}')
 
               out.append('\nEQUIPPED ITEM BLOCKS')
-              equipped_ids = set(slot_map)
-              for item_id in sorted(equipped_ids, key=lambda x: int(x) if x.isdigit() else 999999):
+              for item_id in sorted(set(slot_map), key=lambda x: int(x) if x.isdigit() else 999999):
                   out.append(f'=== ITEM {item_id} / {" | ".join(slot_map[item_id])} ===')
                   out.append(item_map.get(item_id, '[missing item text]'))
 
-              out.append('\nITEMS CONTAINING SPIRIT OR CHARM')
-              for item_id, text in item_map.items():
-                  if re.search(r'spirit|charm', text, re.I):
-                      out.append(f'=== ITEM {item_id} / {" | ".join(slot_map.get(item_id, []))} ===')
-                      out.append(text)
-
           out.append('\nENABLED SKILL GROUPS')
           skills = root.find('Skills')
-          if skills is None:
-              out.append('No <Skills> section')
-          else:
-              active_set = skills.attrib.get('activeSkillSet')
-              out.append(f'Skills attrs={skills.attrib}; activeSkillSet={active_set}')
+          if skills is not None:
+              out.append(f'Skills attrs={skills.attrib}')
               for set_elem in skills.findall('SkillSet'):
                   out.append(f'--- SkillSet {set_elem.attrib} ---')
                   for index, skill in enumerate(set_elem.findall('Skill'), 1):
@@ -124,34 +100,186 @@ jobs:
                       gems = []
                       for gem in skill.findall('Gem'):
                           if gem.attrib.get('enabled', 'true') != 'false':
-                              gems.append(
-                                  f"{gem.attrib.get('nameSpec')} [skillId={gem.attrib.get('skillId')}; "
-                                  f"variantId={gem.attrib.get('variantId')}; level={gem.attrib.get('level')}; "
-                                  f"quality={gem.attrib.get('quality')}]"
-                              )
+                              gems.append(f"{gem.attrib.get('nameSpec')} [skillId={gem.attrib.get('skillId')}; variantId={gem.attrib.get('variantId')}; level={gem.attrib.get('level')}; quality={gem.attrib.get('quality')}]")
                       if gems:
                           out.append(f'Group {index}: ' + ' -> '.join(gems))
-
-          out.append('\nCONFIG INPUTS CONTAINING SPIRIT OR CHARM')
-          for inp in root.findall('.//Input'):
-              data = ' '.join(inp.attrib.values())
-              if re.search(r'spirit|charm', data, re.I):
-                  out.append(str(inp.attrib))
 
           out.append('\nTREE SPECS')
           for spec in root.findall('.//Spec'):
               out.append(str(spec.attrib))
 
           open('maxroll_spirit_extract.txt', 'w', encoding='utf-8').write('\n'.join(out))
-          print('decoded xml bytes:', len(pretty.encode('utf-8')))
-          print('extract bytes:', len('\n'.join(out).encode('utf-8')))
           PY
+
+      - name: Clone official PoB2 engine
+        shell: bash
+        run: |
+          git clone --depth 1 https://github.com/PathOfBuildingCommunity/PathOfBuilding-PoE2.git pob2
+
+      - name: Run exact PoB Spirit calculation and breakdown
+        shell: bash
+        run: |
+          cat > inspect_spirit.lua <<'LUA'
+          dofile('HeadlessWrapper.lua')
+
+          local xmlPath = arg[1]
+          local f = assert(io.open(xmlPath, 'rb'))
+          local xmlText = f:read('*a')
+          f:close()
+          loadBuildFromXML(xmlText, 'maxroll-5o3s6z0w')
+          for _ = 1, 3 do runCallback('OnFrame') end
+
+          local function simple(v)
+            local t = type(v)
+            if t == 'string' or t == 'number' or t == 'boolean' then return tostring(v) end
+            return '<' .. t .. '>'
+          end
+
+          local function dumpTable(tbl, indent, depth, seen)
+            indent = indent or ''
+            depth = depth or 0
+            seen = seen or {}
+            if type(tbl) ~= 'table' then
+              print(indent .. simple(tbl))
+              return
+            end
+            if seen[tbl] then
+              print(indent .. '<cycle>')
+              return
+            end
+            if depth > 5 then
+              print(indent .. '<max-depth>')
+              return
+            end
+            seen[tbl] = true
+            local keys = {}
+            for k in pairs(tbl) do keys[#keys + 1] = k end
+            table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
+            for _, k in ipairs(keys) do
+              local v = tbl[k]
+              if type(v) == 'table' then
+                print(indent .. tostring(k) .. ' = {')
+                dumpTable(v, indent .. '  ', depth + 1, seen)
+                print(indent .. '}')
+              else
+                print(indent .. tostring(k) .. ' = ' .. simple(v))
+              end
+            end
+            seen[tbl] = nil
+          end
+
+          local function dumpMod(mod, value, prefix)
+            prefix = prefix or ''
+            print(prefix .. string.format('name=%s type=%s value=%s source=%s flags=%s keywordFlags=%s',
+              tostring(mod.name), tostring(mod.type), tostring(value), tostring(mod.source), tostring(mod.flags), tostring(mod.keywordFlags)))
+            local extras = {}
+            for k, v in pairs(mod) do
+              if k ~= 'name' and k ~= 'type' and k ~= 'value' and k ~= 'source' and k ~= 'flags' and k ~= 'keywordFlags' and type(v) ~= 'table' then
+                extras[#extras + 1] = tostring(k) .. '=' .. tostring(v)
+              end
+            end
+            table.sort(extras)
+            if #extras > 0 then print(prefix .. '  extras: ' .. table.concat(extras, ', ')) end
+          end
+
+          local function scanModStore(store, label, seen)
+            seen = seen or {}
+            if type(store) ~= 'table' or seen[store] then return end
+            seen[store] = true
+            for _, mod in ipairs(store) do
+              local n = tostring(mod.name or ''):lower()
+              local s = tostring(mod.source or ''):lower()
+              if n:find('spirit', 1, true) or n:find('reserv', 1, true) or s:find('spirit', 1, true) or s:find('sacred flow', 1, true) then
+                local value = mod.value
+                if mod[1] then
+                  local ok, evaluated = pcall(function() return store:EvalMod(mod, nil) end)
+                  if ok then value = evaluated end
+                end
+                dumpMod(mod, value, label .. ': ')
+              end
+            end
+            scanModStore(store.parent, label .. '.parent', seen)
+          end
+
+          local function inspectEnv(label, env)
+            print('\n========== ' .. label .. ' ==========')
+            if type(env) ~= 'table' or type(env.player) ~= 'table' then
+              print('ENV MISSING')
+              return
+            end
+            local actor = env.player
+            print('OUTPUT KEYS CONTAINING SPIRIT / RESERVATION / CHARM')
+            local outputKeys = {}
+            for k in pairs(actor.output or {}) do
+              local low = tostring(k):lower()
+              if low:find('spirit', 1, true) or low:find('reserv', 1, true) or low:find('charm', 1, true) then outputKeys[#outputKeys + 1] = k end
+            end
+            table.sort(outputKeys, function(a,b) return tostring(a) < tostring(b) end)
+            for _, k in ipairs(outputKeys) do print(tostring(k) .. '=' .. tostring(actor.output[k])) end
+
+            print('\nBREAKDOWN KEYS CONTAINING SPIRIT / RESERVATION / CHARM')
+            local breakdownKeys = {}
+            for k in pairs(actor.breakdown or {}) do
+              local low = tostring(k):lower()
+              if low:find('spirit', 1, true) or low:find('reserv', 1, true) or low:find('charm', 1, true) then breakdownKeys[#breakdownKeys + 1] = k end
+            end
+            table.sort(breakdownKeys, function(a,b) return tostring(a) < tostring(b) end)
+            for _, k in ipairs(breakdownKeys) do
+              print('--- breakdown.' .. tostring(k) .. ' ---')
+              dumpTable(actor.breakdown[k])
+            end
+
+            print('\nALL MATCHING MODS IN ACTOR MODDB')
+            scanModStore(actor.modDB, label .. '.modDB')
+
+            print('\nTABULATED SPIRIT MODIFIERS')
+            for _, modType in ipairs({'BASE','INC','MORE','OVERRIDE'}) do
+              local rows = actor.modDB:Tabulate(modType, nil, 'Spirit')
+              print('--- ' .. modType .. ' count=' .. tostring(#rows) .. ' sum=' .. tostring(actor.modDB:Combine(modType, nil, 'Spirit')) .. ' ---')
+              for _, row in ipairs(rows) do dumpMod(row.mod, row.value, '  ') end
+            end
+
+            print('\nACTIVE SKILLS: SPIRIT / RESERVATION FIELDS')
+            for i, skill in ipairs(actor.activeSkillList or {}) do
+              local name = (skill.activeEffect and skill.activeEffect.grantedEffect and skill.activeEffect.grantedEffect.name)
+                or (skill.activeEffect and skill.activeEffect.srcInstance and skill.activeEffect.srcInstance.nameSpec)
+                or ('skill-' .. i)
+              local found = {}
+              for k, v in pairs(skill.skillData or {}) do
+                local low = tostring(k):lower()
+                if low:find('spirit', 1, true) or low:find('reserv', 1, true) then found[#found + 1] = tostring(k) .. '=' .. simple(v) end
+              end
+              if #found > 0 then
+                table.sort(found)
+                print(string.format('[%d] %s :: %s', i, tostring(name), table.concat(found, ', ')))
+              end
+            end
+          end
+
+          print('BUILD CLASS=' .. tostring(build.className) .. ' ASCENDANCY=' .. tostring(build.ascendClassName) .. ' LEVEL=' .. tostring(build.characterLevel))
+          inspectEnv('MAIN', build.calcsTab.mainEnv)
+          inspectEnv('CALCS', build.calcsTab.calcsEnv)
+          LUA
+
+          docker run --rm \
+            -e HOME=/tmp \
+            -e CI=false \
+            -v "$PWD/pob2:/workdir" \
+            -v "$PWD/maxroll_build.xml:/input/maxroll_build.xml:ro" \
+            -v "$PWD/inspect_spirit.lua:/input/inspect_spirit.lua:ro" \
+            -w /workdir/src \
+            ghcr.io/pathofbuildingcommunity/pathofbuilding-tests:latest \
+            luajit /input/inspect_spirit.lua /input/maxroll_build.xml \
+            > pob_spirit_breakdown.txt 2>&1
+
+          grep -n -i -C 8 'output.Spirit\|breakdown.Spirit\|SpiritUnreserved' pob2/src/Modules/CalcDefence.lua pob2/src/Modules/CalcPerform.lua pob2/src/Modules/Calcs.lua \
+            > pob_spirit_source_snippets.txt || true
 
       - name: Commit fetched data
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add maxroll_raw.txt maxroll_headers.txt maxroll_fetch_info.txt maxroll_build.xml maxroll_spirit_extract.txt
-          git commit -m 'Fetch, decode, and inspect Maxroll PoB data [skip ci]' || exit 0
+          git add maxroll_raw.txt maxroll_headers.txt maxroll_fetch_info.txt maxroll_build.xml maxroll_spirit_extract.txt pob_spirit_breakdown.txt pob_spirit_source_snippets.txt
+          git commit -m 'Calculate exact Spirit breakdown for Maxroll build [skip ci]' || exit 0
           git push
