@@ -1,0 +1,3 @@
+bytes=12944
+maxroll_raw.txt: ASCII text, with very long lines (12944), with no line terminators
+eNrtPWlz27iSn0e_guWq3S9xJjhIkMwmb0u-PbFjj49k3nxJgSQoMaFIDQ87ztT-920AlERKlETamczxsm8rY5HdDaDRN0Dg1f9-nsTGncjyKE1e7-Af0Y4hEj8NomT0euf25ui5s_O__xq8uuTF-CLcK6NYviH_GvzwSv0w7iJxf54G4vXO6fnlxdXNjsFzXyTBfszz_C2fwIvrMZ_wZMeIxZ2IX--49o7hj3nG_UJkZ_LZsCxSTSPkcS52jAmPkuvU_ySK4ywtp693CKAsCB5kZRTsGAXPRqJ4N-s7-oB3

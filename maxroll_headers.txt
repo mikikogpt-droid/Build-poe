@@ -1,0 +1,15 @@
+HTTP/2 200 
+date: Sat, 20 Jun 2026 05:01:26 GMT
+content-type: text/plain; charset=utf-8
+x-frame-options: SAMEORIGIN
+content-security-policy: frame-ancestors 'self'
+cache-control: public, max-age=300, must-revalidate, s-maxage=600
+vary: Accept-Encoding
+strict-transport-security: max-age=31536000; includeSubDomains
+last-modified: Sat, 20 Jun 2026 05:01:26 GMT
+set-cookie: geoCC=US;path=/;
+set-cookie: geoRC=VA;path=/;
+cf-cache-status: EXPIRED
+server: cloudflare
+cf-ray: a0e8372f788a602a-IAD
+
