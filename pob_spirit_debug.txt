@@ -17,15 +17,16 @@ e355b269fee7: Verifying Checksum
 e355b269fee7: Download complete
 f54a5150a760: Verifying Checksum
 f54a5150a760: Download complete
+b9ae4518d971: Verifying Checksum
 b9ae4518d971: Download complete
 faaf81449ecf: Verifying Checksum
 faaf81449ecf: Download complete
-f54a5150a760: Pull complete
 de13a140d0da: Verifying Checksum
 de13a140d0da: Download complete
-2195989377bd: Verifying Checksum
 2195989377bd: Download complete
+0976895307ac: Verifying Checksum
 0976895307ac: Download complete
+f54a5150a760: Pull complete
 58b482cd73d7: Verifying Checksum
 58b482cd73d7: Download complete
 58b482cd73d7: Pull complete
@@ -52,5 +53,5 @@ stack traceback:
 	HeadlessWrapper.lua:193: in main chunk
 	[C]: in function 'dofile'
 	/input/inspect_spirit.lua:1: in main chunk
-	[C]: at 0x5629b769f280
+	[C]: at 0x559b0d44c280
 EXIT_STATUS=1
