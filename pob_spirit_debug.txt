@@ -1,0 +1,56 @@
+Unable to find image 'ghcr.io/pathofbuildingcommunity/pathofbuilding-tests:latest' locally
+latest: Pulling from pathofbuildingcommunity/pathofbuilding-tests
+f54a5150a760: Pulling fs layer
+58b482cd73d7: Pulling fs layer
+e355b269fee7: Pulling fs layer
+b9ae4518d971: Pulling fs layer
+faaf81449ecf: Pulling fs layer
+de13a140d0da: Pulling fs layer
+2195989377bd: Pulling fs layer
+0976895307ac: Pulling fs layer
+b9ae4518d971: Waiting
+faaf81449ecf: Waiting
+de13a140d0da: Waiting
+2195989377bd: Waiting
+0976895307ac: Waiting
+e355b269fee7: Verifying Checksum
+e355b269fee7: Download complete
+f54a5150a760: Verifying Checksum
+f54a5150a760: Download complete
+b9ae4518d971: Download complete
+faaf81449ecf: Verifying Checksum
+faaf81449ecf: Download complete
+f54a5150a760: Pull complete
+de13a140d0da: Verifying Checksum
+de13a140d0da: Download complete
+2195989377bd: Verifying Checksum
+2195989377bd: Download complete
+0976895307ac: Download complete
+58b482cd73d7: Verifying Checksum
+58b482cd73d7: Download complete
+58b482cd73d7: Pull complete
+e355b269fee7: Pull complete
+b9ae4518d971: Pull complete
+faaf81449ecf: Pull complete
+de13a140d0da: Pull complete
+2195989377bd: Pull complete
+0976895307ac: Pull complete
+Digest: sha256:ac211eb06ea378413a8bac40f621aa75b33843e8c5614b49e1b2a6e4d75c8408
+Status: Downloaded newer image for ghcr.io/pathofbuildingcommunity/pathofbuilding-tests:latest
+luajit: Launch.lua:45: module 'xml' not found:
+	no field package.preload['xml']
+	no file './xml.lua'
+	no file '/usr/local/share/luajit-2.0.5/xml.lua'
+	no file '/usr/local/share/lua/5.1/xml.lua'
+	no file '/usr/local/share/lua/5.1/xml/init.lua'
+	no file './xml.so'
+	no file '/usr/local/lib/lua/5.1/xml.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+stack traceback:
+	[C]: in function 'require'
+	Launch.lua:45: in function 'runCallback'
+	HeadlessWrapper.lua:193: in main chunk
+	[C]: in function 'dofile'
+	/input/inspect_spirit.lua:1: in main chunk
+	[C]: at 0x5629b769f280
+EXIT_STATUS=1
