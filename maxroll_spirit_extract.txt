@@ -1,0 +1,415 @@
+ROOT SECTIONS
+- Build: children=103 attrs={'viewMode': 'IMPORT', 'ascendClassName': 'Shaman', 'level': '97', 'characterLevelAutoMode': 'false', 'mainSocketGroup': '2', 'className': 'Druid', 'targetVersion': '0_1'}
+- Config: children=1 attrs={'activeConfigSet': '1'}
+- Notes: children=0 attrs={}
+- Import: children=0 attrs={'exportParty': 'false', 'lastCharacterHash': '8911f137b01b0f485af34328dbbd01e7ed42fbc6', 'lastLeague': 'Runes of Aldur', 'lastRealm': 'PoE2'}
+- Tree: children=1 attrs={'activeSpec': '1'}
+- Skills: children=1 attrs={'defaultGemQuality': 'nil', 'sortGemsByDPSField': 'CombinedDPS', 'sortGemsByDPS': 'true', 'activeSkillSet': '1', 'showSupportGemTypes': 'ALL', 'showLegacyGems': 'false', 'defaultGemLevel': 'normalMaximum'}
+- Items: children=26 attrs={'showStatDifferences': 'true', 'activeItemSet': '1', 'useSecondWeaponSet': 'nil'}
+- Party: children=0 attrs={'destination': 'All', 'ShowAdvanceTools': 'false', 'append': 'false'}
+- TreeView: children=0 attrs={'zoomLevel': '3', 'zoomX': '0', 'zoomY': '0', 'searchStr': '', 'showStatDifferences': 'true'}
+- Calcs: children=51 attrs={}
+
+SPIRIT PLAYER STATS
+{'value': '270', 'stat': 'Spirit'}
+{'value': '-311', 'stat': 'SpiritUnreserved'}
+{'value': '-115.18518518519', 'stat': 'SpiritUnreservedPercent'}
+
+ALL SPIRIT / CHARM / RESERVATION OCCURRENCES
+<PlayerStat> attrs={'value': '0', 'stat': 'ReservationDPS'} text=''
+<PlayerStat> attrs={'value': '0', 'stat': 'ReservedDarkness'} text=''
+<PlayerStat> attrs={'value': '1463', 'stat': 'LifeUnreserved'} text=''
+<PlayerStat> attrs={'value': '100', 'stat': 'LifeUnreservedPercent'} text=''
+<PlayerStat> attrs={'value': '9893', 'stat': 'ManaUnreserved'} text=''
+<PlayerStat> attrs={'value': '100', 'stat': 'ManaUnreservedPercent'} text=''
+<PlayerStat> attrs={'value': '270', 'stat': 'Spirit'} text=''
+<PlayerStat> attrs={'value': '-311', 'stat': 'SpiritUnreserved'} text=''
+<PlayerStat> attrs={'value': '-115.18518518519', 'stat': 'SpiritUnreservedPercent'} text=''
+<Input> attrs={'string': '30% increased Charm Charges Gained  +1 Charm Slot', 'name': 'questAct 2Valley of the TitansMedallion'} text=''
+<Item> attrs={'id': '11'} text='Rarity: RARE\nGlyph Choker\nAbsent Amulet\nUnique ID: 437885f65cb16e2817921301afbf65202afbd9b9fc3611f5ff99b2affe10deb0\nItem Level: 81\nLevelReq: 90\nImplicits: 4\n{enchant}Allocates Mental Perseverance\n-1 Prefix Modifier allowed\n-1 Suffix Modifier allowed\nGrants Skill: Level 20 Cast on Critical\n{fractured}+50 to Spirit\n+179 to maximum Mana\n+4 to Level of all Spell Skills\n{desecrated}14% of Damage is taken from Mana before Life'
+<Item> attrs={'id': '12'} text='Rarity: UNIQUE\nMyris Uxor\nRunemastered Covert Hood\nEvasion: 246\nWard: 149\nUnique ID: d1046e619c719e08e348955ad75a38933677972711f93240151a7c8e47895103\nItem Level: 80\nQuality: 20\nSockets: S\nRune: Idol of Eeshta\nLevelReq: 56\nImplicits: 2\n{enchant}{rune}15% increased Cost Efficiency\n{enchant}{rune}Bonded: Meta Skills have 15% increased Reservation Efficiency\n59% increased Evasion Rating\n+132 to Accuracy Rating\n+67 to maximum Mana\n122% increased Culling Strike Threshold\nCorrupted'
+<Item> attrs={'id': '13'} text='Rarity: UNIQUE\nRite of Passage\nGolden Charm\nUnique ID: 58e67f9f512285e5ceb3a3fab21c646eebd3462e113020397c7ddf8e6197c5fd\nItem Level: 80\nQuality: 0\nLevelReq: 50\nImplicits: 1\nUsed when you kill a Rare or Unique enemy\nPossessed by Spirit Of The Cat for 19 seconds on use'
+<Item> attrs={'id': '15'} text="Rarity: UNIQUE\nMageblood\nUtility Belt\nCharm Slots: 3\nUnique ID: 9f9a0d86c7ec6b5c9c80c0a1f3ce1b1140b5ba0d16763357770b0d5949883a89\nItem Level: 81\nLevelReq: 55\nImplicits: 2\nHas 3 Charm Slots\n20% of Flask Recovery applied Instantly\nLegacy of Gold\nLegacy of Gold\nLegacy of Quicksilver\nLegacy of Bismuth\nAll Mage's Legacies have 48% increased effect per duplicate Mage's Legacy you have"
+<Item> attrs={'id': '17'} text='Rarity: UNIQUE\nNascent Hope\nThawing Charm\nUnique ID: 62646b78d43c9cfc07e8fff36e124799d710f12b2d90528e9841347174d9d001\nItem Level: 79\nQuality: 0\nLevelReq: 12\nImplicits: 1\nUsed when you become Frozen\n20% Chance to gain a Charge when you kill an enemy\nEnergy Shield Recharge starts on use'
+<Slot> attrs={'itemId': '0', 'itemPbURL': '', 'name': 'Charm 1'} text=''
+<Slot> attrs={'itemId': '17', 'itemPbURL': '', 'name': 'Charm 2'} text=''
+<Slot> attrs={'itemId': '13', 'itemPbURL': '', 'name': 'Charm 3'} text=''
+<Section> attrs={'id': 'Spirit', 'collapsed': 'false', 'subsection': 'Spirit'} text=''
+<Section> attrs={'id': 'Flasks', 'collapsed': 'true', 'subsection': 'Charms'} text=''
+
+ITEM SECTION CHILDREN
+<ItemSet> attrs={'id': '1', 'useSecondWeaponSet': 'nil', 'title': 'Default'} text=''
+
+EQUIPPED ITEM BLOCKS
+=== ITEM 0 / Slot:{'itemId': '0', 'itemPbURL': '', 'name': 'Leg 2'} | Slot:{'itemId': '0', 'itemPbURL': '', 'name': 'Leg 1'} | Slot:{'itemId': '0', 'itemPbURL': '', 'name': 'Arm 2'} | Slot:{'itemId': '0', 'itemPbURL': '', 'name': 'Arm 1'} | Slot:{'itemId': '0', 'itemPbURL': '', 'name': 'Charm 1'} | Slot:{'itemId': '0', 'itemPbURL': '', 'name': 'Ring 3'} | Slot:{'itemId': '0', 'itemPbURL': '', 'name': 'Weapon 2 Swap'} ===
+[missing item text]
+=== ITEM 11 / Slot:{'itemId': '11', 'itemPbURL': '', 'name': 'Amulet'} ===
+			Rarity: RARE
+Glyph Choker
+Absent Amulet
+Unique ID: 437885f65cb16e2817921301afbf65202afbd9b9fc3611f5ff99b2affe10deb0
+Item Level: 81
+LevelReq: 90
+Implicits: 4
+{enchant}Allocates Mental Perseverance
+-1 Prefix Modifier allowed
+-1 Suffix Modifier allowed
+Grants Skill: Level 20 Cast on Critical
+{fractured}+50 to Spirit
++179 to maximum Mana
++4 to Level of all Spell Skills
+{desecrated}14% of Damage is taken from Mana before Life
+			
+=== ITEM 12 / Slot:{'itemId': '12', 'itemPbURL': '', 'name': 'Helmet'} ===
+			Rarity: UNIQUE
+Myris Uxor
+Runemastered Covert Hood
+Evasion: 246
+Ward: 149
+Unique ID: d1046e619c719e08e348955ad75a38933677972711f93240151a7c8e47895103
+Item Level: 80
+Quality: 20
+Sockets: S
+Rune: Idol of Eeshta
+LevelReq: 56
+Implicits: 2
+{enchant}{rune}15% increased Cost Efficiency
+{enchant}{rune}Bonded: Meta Skills have 15% increased Reservation Efficiency
+59% increased Evasion Rating
++132 to Accuracy Rating
++67 to maximum Mana
+122% increased Culling Strike Threshold
+Corrupted
+			
+=== ITEM 13 / Slot:{'itemId': '13', 'itemPbURL': '', 'name': 'Charm 3'} ===
+			Rarity: UNIQUE
+Rite of Passage
+Golden Charm
+Unique ID: 58e67f9f512285e5ceb3a3fab21c646eebd3462e113020397c7ddf8e6197c5fd
+Item Level: 80
+Quality: 0
+LevelReq: 50
+Implicits: 1
+Used when you kill a Rare or Unique enemy
+Possessed by Spirit Of The Cat for 19 seconds on use
+		
+=== ITEM 14 / Slot:{'itemId': '14', 'itemPbURL': '', 'name': 'Gloves'} ===
+			Rarity: RARE
+Hate Caress
+Vaal Gloves
+Energy Shield: 272
+Unique ID: 23f51b545e36d89ab69d0b0ac063e1b704c18daf14de770eb0c9da4a1cd683ef
+Item Level: 79
+Quality: 26
+Sockets: S S
+Rune: Perfect Mind Rune
+Rune: Kurgal's Gaze
+LevelReq: 75
+Implicits: 4
+{enchant}{rune}Bonded: +20 to maximum Life
+{enchant}{rune}+50 to maximum Mana
+{enchant}{rune}Bonded: +20 to maximum Mana
+{enchant}{rune}40% increased effect of Arcane Surge on you
+{fractured}+38% to Lightning Resistance
++58 to maximum Energy Shield
++116 to maximum Mana
+16% increased Rarity of Items found
+{desecrated}98% increased Energy Shield
+{crafted}60% increased effect of Socketed Augment Items
+Corrupted
+			
+=== ITEM 15 / Slot:{'itemId': '15', 'itemPbURL': '', 'name': 'Belt'} ===
+			Rarity: UNIQUE
+Mageblood
+Utility Belt
+Charm Slots: 3
+Unique ID: 9f9a0d86c7ec6b5c9c80c0a1f3ce1b1140b5ba0d16763357770b0d5949883a89
+Item Level: 81
+LevelReq: 55
+Implicits: 2
+Has 3 Charm Slots
+20% of Flask Recovery applied Instantly
+Legacy of Gold
+Legacy of Gold
+Legacy of Quicksilver
+Legacy of Bismuth
+All Mage's Legacies have 48% increased effect per duplicate Mage's Legacy you have
+			
+=== ITEM 16 / Slot:{'itemId': '16', 'itemPbURL': '', 'name': 'Weapon 1'} ===
+			Rarity: UNIQUE
+Runeseeker's Call
+Runemastered Runic Fork
+Unique ID: f49b5760994047d528cd5dd4b9c60b01ba4c5207f1323c1399e8cb6cfb9bd815
+Item Level: 86
+Quality: 19
+Sockets: S S S S S S
+Rune: Legacy of Lifesprig
+Rune: Perfect Mind Rune
+Rune: Perfect Mind Rune
+Rune: Perfect Mind Rune
+Rune: Perfect Vision Rune
+Rune: Perfect Vision Rune
+LevelReq: 84
+Implicits: 8
+{enchant}{rune}+810 to maximum Mana
+{enchant}{rune}Bonded: 45% increased maximum Mana
+{enchant}{rune}+6 to Level of all Spell Skills
+{enchant}{rune}168% increased Critical Hit Chance for Spells
+{enchant}{rune}Bonded: 150% increased Critical Damage Bonus
+{enchant}{rune}Bonded: Leeches 3% of maximum Life when you Cast a Spell
+41% increased Mana Regeneration Rate
+Grants Skill: Level 19 The Stars Answer
+Only Runes can be Socketed in this item
+200% increased effect of Socketed Runes
+Corrupted
+			
+=== ITEM 17 / Slot:{'itemId': '17', 'itemPbURL': '', 'name': 'Charm 2'} ===
+			Rarity: UNIQUE
+Nascent Hope
+Thawing Charm
+Unique ID: 62646b78d43c9cfc07e8fff36e124799d710f12b2d90528e9841347174d9d001
+Item Level: 79
+Quality: 0
+LevelReq: 12
+Implicits: 1
+Used when you become Frozen
+20% Chance to gain a Charge when you kill an enemy
+Energy Shield Recharge starts on use
+		
+=== ITEM 18 / Slot:{'itemId': '18', 'itemPbURL': '', 'name': 'Flask 1'} ===
+			Rarity: NORMAL
+Superior Ultimate Life Flask
+Unique ID: 0a43303d9527486e719b1d03f1196c40f9a997029f927a0816d82dee44bcc1e4
+Item Level: 60
+Quality: 7
+LevelReq: 60
+Implicits: 0
+		
+=== ITEM 19 / Slot:{'itemId': '19', 'itemPbURL': '', 'name': 'Weapon 2'} ===
+			Rarity: RARE
+Mind Emblem
+Tasalian Focus
+Energy Shield: 390
+Unique ID: b1e666a124af9d501f87fa83e0228a149468982b1b253154f4a2fd9e3b93d8a0
+Item Level: 80
+Quality: 20
+Sockets: S
+Rune: Serle's Triumph
+LevelReq: 80
+Implicits: 1
+{enchant}{rune}+1 Suffix Modifier allowed
++80 to maximum Energy Shield
+90% increased Energy Shield
++2 to Level of all Spell Skills
+46% increased Critical Hit Chance for Spells
+55% increased Mana Regeneration Rate
+{desecrated}+164 to maximum Mana
+{crafted}42% increased Cast Speed
+{crafted}Gain 12% of Elemental Damage as Extra Cold Damage
+			
+=== ITEM 20 / Slot:{'itemId': '20', 'itemPbURL': '', 'name': 'Flask 2'} ===
+			Rarity: UNIQUE
+Uhtred's Chalice
+Transcendent Mana Flask
+Unique ID: 01e0ee33510a5027d12c7a13d30c843fa6b0b8d9dded4de13a7e9bf052b6f376
+Item Level: 83
+Quality: 20
+LevelReq: 50
+Implicits: 0
+300% increased Amount Recovered
+70% reduced Recovery rate
+52% reduced Charges
+Lose 5% Life per second while you have no Runic Ward during Effect
+Mana Recovery from Flasks can Overflow maximum Mana during Effect
+			
+=== ITEM 21 / Slot:{'itemId': '21', 'itemPbURL': '', 'name': 'Boots'} ===
+			Rarity: RARE
+Dread Stride
+Sekhema Sandals
+Energy Shield: 350
+Unique ID: e0d54dc6704e491f967983365188b0347f926034d430f4514fbbc12f74b5e69c
+Item Level: 82
+Quality: 23
+Sockets: S S
+Rune: Farrul's Rune of the Chase
+Rune: Greater Glacial Rune
+LevelReq: 80
+Implicits: 5
+{enchant}{rune}5% increased Movement Speed
+{enchant}{rune}Bonded: +20 to maximum Life
+{enchant}{rune}Bonded: +20 to maximum Mana
+{enchant}{rune}+18% to Cold Resistance
+{enchant}{rune}Bonded: 10% increased Cooldown Recovery Rate
+{fractured}+45% to Cold Resistance
+35% increased Movement Speed
+99% increased Energy Shield
++43% to Fire Resistance
++27% to Chaos Resistance
+{desecrated}+60 to maximum Energy Shield
+Corrupted
+			
+=== ITEM 22 / Slot:{'itemId': '22', 'itemPbURL': '', 'name': 'Weapon 1 Swap'} ===
+			Rarity: RARE
+Horror Spire
+Chiming Staff
+Unique ID: e0d1a483ff5b067cbcef2ca71ff37a4629ef0fadb17627c90177dae9330492ab
+Item Level: 80
+Quality: 20
+Sockets: S S
+Rune: Greater Vision Rune
+Rune: Greater Vision Rune
+LevelReq: 84
+Implicits: 3
+{enchant}{rune}48% increased Critical Hit Chance for Spells
+{enchant}{rune}Bonded: 50% increased Critical Damage Bonus
+Grants Skill: Level 19 Sigil of Power
+Gain 43% of Damage as Extra Cold Damage
+96% increased Spell Damage
++227 to maximum Mana
++6 to Level of all Spell Skills
+38% increased Cast Speed
+71% increased Flammability Magnitude
+Corrupted
+			
+=== ITEM 23 / Slot:{'itemId': '23', 'itemPbURL': '', 'name': 'Ring 2'} ===
+			Rarity: UNIQUE
+Kalandra's Touch
+Ring
+Unique ID: 8c62a9d998452fcc710b33af15855b215ff1dca8a40dd3a098997fcee9223c3b
+Item Level: 44
+LevelReq: 0
+Implicits: 0
+Reflects opposite Ring
+			
+=== ITEM 24 / Slot:{'itemId': '24', 'itemPbURL': '', 'name': 'Body Armour'} ===
+			Rarity: RARE
+Phoenix Curtain
+Feathered Raiment
+Energy Shield: 669
+Unique ID: 18243c05f609c771f0aef386db0dffdbbfa406549d81d331bcae3d358a57e7f6
+Item Level: 84
+Quality: 20
+Sockets: S S S
+Rune: Medved's Tending
+Rune: The Greatwolf's Rune of Willpower
+Rune: Perfect Iron Rune
+LevelReq: 80
+Implicits: 9
+{enchant}{rune}20% increased Armour, Evasion and Energy Shield
+{enchant}{rune}Bonded: +20 to maximum Life
+{enchant}{rune}Bonded: 3% increased maximum Life
+{enchant}{rune}Bonded: +20 to maximum Mana
+{enchant}{rune}Bonded: 3% increased maximum Mana
+{enchant}{rune}15% of Damage is taken from Mana before Life
+{enchant}{rune}Bonded: 8% of Maximum Life Converted to Energy Shield
+{enchant}{rune}Can roll Soul modifiers
+10% of Damage is taken from Mana before Life
+{fractured}+96 to maximum Energy Shield
+104% increased Energy Shield
+20% increased maximum Mana
++45% to Lightning Resistance
++24% to Fire and Chaos Resistances
+{desecrated}20% of Damage is taken from Mana before Life
+			
+=== ITEM 25 / Slot:{'itemId': '25', 'itemPbURL': '', 'name': 'Ring 1'} ===
+			Rarity: RARE
+Empyrean Circle
+Mnemonic Ring
+Unique ID: d596d165157cc2ede37ca958fba343c42bec251d4170d8dda890d95c30b74ce1
+Item Level: 81
+LevelReq: 40
+Implicits: 1
+8% increased maximum Mana
+{fractured}36% increased Mana Cost Efficiency of Spells
++247 to maximum Mana
+18% increased Rarity of Items found
+85% increased Mana Regeneration Rate
+{desecrated}24% increased Cast Speed
+{crafted}8% increased maximum Mana
+			
+
+ITEMS CONTAINING SPIRIT OR CHARM
+=== ITEM 11 / Slot:{'itemId': '11', 'itemPbURL': '', 'name': 'Amulet'} ===
+			Rarity: RARE
+Glyph Choker
+Absent Amulet
+Unique ID: 437885f65cb16e2817921301afbf65202afbd9b9fc3611f5ff99b2affe10deb0
+Item Level: 81
+LevelReq: 90
+Implicits: 4
+{enchant}Allocates Mental Perseverance
+-1 Prefix Modifier allowed
+-1 Suffix Modifier allowed
+Grants Skill: Level 20 Cast on Critical
+{fractured}+50 to Spirit
++179 to maximum Mana
++4 to Level of all Spell Skills
+{desecrated}14% of Damage is taken from Mana before Life
+			
+=== ITEM 13 / Slot:{'itemId': '13', 'itemPbURL': '', 'name': 'Charm 3'} ===
+			Rarity: UNIQUE
+Rite of Passage
+Golden Charm
+Unique ID: 58e67f9f512285e5ceb3a3fab21c646eebd3462e113020397c7ddf8e6197c5fd
+Item Level: 80
+Quality: 0
+LevelReq: 50
+Implicits: 1
+Used when you kill a Rare or Unique enemy
+Possessed by Spirit Of The Cat for 19 seconds on use
+		
+=== ITEM 15 / Slot:{'itemId': '15', 'itemPbURL': '', 'name': 'Belt'} ===
+			Rarity: UNIQUE
+Mageblood
+Utility Belt
+Charm Slots: 3
+Unique ID: 9f9a0d86c7ec6b5c9c80c0a1f3ce1b1140b5ba0d16763357770b0d5949883a89
+Item Level: 81
+LevelReq: 55
+Implicits: 2
+Has 3 Charm Slots
+20% of Flask Recovery applied Instantly
+Legacy of Gold
+Legacy of Gold
+Legacy of Quicksilver
+Legacy of Bismuth
+All Mage's Legacies have 48% increased effect per duplicate Mage's Legacy you have
+			
+=== ITEM 17 / Slot:{'itemId': '17', 'itemPbURL': '', 'name': 'Charm 2'} ===
+			Rarity: UNIQUE
+Nascent Hope
+Thawing Charm
+Unique ID: 62646b78d43c9cfc07e8fff36e124799d710f12b2d90528e9841347174d9d001
+Item Level: 79
+Quality: 0
+LevelReq: 12
+Implicits: 1
+Used when you become Frozen
+20% Chance to gain a Charge when you kill an enemy
+Energy Shield Recharge starts on use
+		
+
+ENABLED SKILL GROUPS
+Skills attrs={'defaultGemQuality': 'nil', 'sortGemsByDPSField': 'CombinedDPS', 'sortGemsByDPS': 'true', 'activeSkillSet': '1', 'showSupportGemTypes': 'ALL', 'showLegacyGems': 'false', 'defaultGemLevel': 'normalMaximum'}; activeSkillSet=1
+--- SkillSet {'id': '1'} ---
+Group 1: The Stars Answer [skillId=TheStarsAnswerPlayer; variantId=TheStarsAnswer; level=19; quality=0]
+Group 2: Cast on Critical [skillId=MetaCastOnCritPlayer; variantId=CastOnCriticalStrike; level=20; quality=0] -> Comet [skillId=CometPlayer; variantId=Comet; level=20; quality=20] -> Spell Cascade [skillId=SupportSpellCascadePlayer; variantId=SpellCascadeSupport; level=1; quality=0] -> Efficiency II [skillId=SupportEfficiencyPlayerTwo; variantId=EfficiencySupportTwo; level=1; quality=0] -> Energy Retention [skillId=SupportEnergyRetentionPlayer; variantId=EnergyRetentionSupport; level=1; quality=0] -> Boundless Energy II [skillId=SupportBoundlessEnergyPlayerTwo; variantId=BoundlessEnergySupportTwo; level=1; quality=0]
+Group 3: Sigil of Power [skillId=SigilOfPowerPlayer; variantId=SigilOfPower; level=19; quality=0] -> Magnified Area II [skillId=SupportMagnifiedAreaPlayerTwo; variantId=MagnifiedAreaSupportTwo; level=1; quality=0] -> Prolonged Duration II [skillId=ProlongedDurationSupportPlayerTwo; variantId=ProlongedDurationSupportTwo; level=1; quality=0] -> Cooldown Recovery II [skillId=SupportCooldownRecoveryPlayerTwo; variantId=CooldownRecoverySupportTwo; level=1; quality=0] -> Efficiency II [skillId=SupportEfficiencyPlayerTwo; variantId=EfficiencySupportTwo; level=1; quality=0]
+Group 4: Orb of Storms [skillId=OrbOfStormsPlayer; variantId=OrbOfStorms; level=20; quality=20] -> Zenith II [skillId=SupportZenithPlayerTwo; variantId=ZenithSupportTwo; level=1; quality=0] -> Overabundance II [skillId=SupportIncreaseLimitPlayerTwo; variantId=IncreaseLimitSupportTwo; level=1; quality=0] -> Unleash [skillId=SupportUnleashPlayer; variantId=UnleashSupport; level=1; quality=0] -> Pinpoint Critical [skillId=SupportPinpointCriticalPlayer; variantId=PinpointCritical; level=1; quality=0] -> Efficiency II [skillId=SupportEfficiencyPlayerTwo; variantId=EfficiencySupportTwo; level=1; quality=0]
+Group 5: Archmage [skillId=ArchmagePlayer; variantId=Archmage; level=20; quality=20] -> Uhtred's Augury [skillId=SupportUhtredAuguryPlayer; variantId=UhtredAugurySupport; level=1; quality=0] -> Dialla's Desire [skillId=SupportDiallasDesirePlayer; variantId=DiallasDesireSupport; level=1; quality=0]
+Group 6: Lightning Warp [skillId=LightningWarpPlayer; variantId=LightningWarp; level=19; quality=20] -> Pinpoint Critical [skillId=SupportPinpointCriticalPlayer; variantId=PinpointCritical; level=1; quality=0] -> Zenith II [skillId=SupportZenithPlayerTwo; variantId=ZenithSupportTwo; level=1; quality=0] -> Magnified Area II [skillId=SupportMagnifiedAreaPlayerTwo; variantId=MagnifiedAreaSupportTwo; level=1; quality=0] -> Execute III [skillId=SupportExecutePlayerThree; variantId=ExecuteSupportThree; level=1; quality=0] -> Efficiency II [skillId=SupportEfficiencyPlayerTwo; variantId=EfficiencySupportTwo; level=1; quality=0]
+Group 7: Eternal Rage [skillId=EternalRagePlayer; variantId=EternalRage; level=14; quality=20] -> Her Declaration [skillId=SupportHerDeclarationPlayer; variantId=HerDeclarationSupport; level=1; quality=0] -> Clarity II [skillId=SupportClarityPlayerTwo; variantId=ClaritySupportTwo; level=1; quality=0]
+Group 8: Frost Wall [skillId=FrostWallPlayer; variantId=FrostWall; level=20; quality=20] -> Spell Cascade [skillId=SupportSpellCascadePlayer; variantId=SpellCascadeSupport; level=1; quality=0] -> Pinpoint Critical [skillId=SupportPinpointCriticalPlayer; variantId=PinpointCritical; level=1; quality=0] -> Rakiata's Flow [skillId=SupportRakiatasFlowPlayer; variantId=RakiatasFlowSupport; level=1; quality=0] -> Magnified Area II [skillId=SupportMagnifiedAreaPlayerTwo; variantId=MagnifiedAreaSupportTwo; level=1; quality=0] -> Zenith II [skillId=SupportZenithPlayerTwo; variantId=ZenithSupportTwo; level=1; quality=0]
+Group 9: Arctic Armour [skillId=ArcticArmourPlayer; variantId=ArcticArmour; level=20; quality=20] -> Embitter [skillId=SupportEmbitterPlayer; variantId=EmbitterSupport; level=1; quality=0] -> Pinpoint Critical [skillId=SupportPinpointCriticalPlayer; variantId=PinpointCritical; level=1; quality=0] -> Zenith II [skillId=SupportZenithPlayerTwo; variantId=ZenithSupportTwo; level=1; quality=0] -> Cold Mastery [skillId=SupportColdMasteryPlayer; variantId=ColdMasterySupport; level=1; quality=0] -> Execute III [skillId=SupportExecutePlayerThree; variantId=ExecuteSupportThree; level=1; quality=0]
+Group 10: Mana Tempest [skillId=ManaTempestPlayer; variantId=ManaTempest; level=19; quality=20] -> Cooldown Recovery II [skillId=SupportCooldownRecoveryPlayerTwo; variantId=CooldownRecoverySupportTwo; level=1; quality=0] -> Advancing Storm [skillId=SupportAdvancingStormPlayer; variantId=AdvancingStormSupport; level=1; quality=0] -> Lightning Mastery [skillId=SupportLightningMasteryPlayer; variantId=LightningMasterySupport; level=1; quality=0] -> Efficiency II [skillId=SupportEfficiencyPlayerTwo; variantId=EfficiencySupportTwo; level=1; quality=0] -> Uhtred's Rite [skillId=SupportUhtredsRitePlayer; variantId=UhtredsRiteSupport; level=1; quality=0]
+Group 11: Mana Remnants [skillId=ManaRemnantsPlayer; variantId=ManaRemnants; level=20; quality=0] -> Harmonic Remnants II [skillId=SupportFleetingRemnantsPlayerTwo; variantId=FleetingRemnantsSupportTwo; level=1; quality=0] -> Remnant Potency I [skillId=SupportInterludePlayer; variantId=RemnantPotencySupport; level=1; quality=0]
+Group 12: Cast on Critical [skillId=MetaCastOnCritPlayer; variantId=CastOnCriticalStrike; level=20; quality=20] -> Comet [skillId=CometPlayer; variantId=Comet; level=20; quality=20] -> Spell Cascade [skillId=SupportSpellCascadePlayer; variantId=SpellCascadeSupport; level=1; quality=0] -> Efficiency II [skillId=SupportEfficiencyPlayerTwo; variantId=EfficiencySupportTwo; level=1; quality=0] -> Energy Retention [skillId=SupportEnergyRetentionPlayer; variantId=EnergyRetentionSupport; level=1; quality=0] -> Boundless Energy II [skillId=SupportBoundlessEnergyPlayerTwo; variantId=BoundlessEnergySupportTwo; level=1; quality=0]
+Group 13: The Stars Answer [skillId=TheStarsAnswerPlayer; variantId=TheStarsAnswer; level=19; quality=0]
+Group 14: Sigil of Power [skillId=SigilOfPowerPlayer; variantId=SigilOfPower; level=19; quality=0]
+Group 15: Cast on Critical [skillId=MetaCastOnCritPlayer; variantId=CastOnCriticalStrike; level=20; quality=0]
+
+CONFIG INPUTS CONTAINING SPIRIT OR CHARM
+{'string': '30% increased Charm Charges Gained  +1 Charm Slot', 'name': 'questAct 2Valley of the TitansMedallion'}
+
+TREE SPECS
+{'classId': '11', 'treeVersion': '0_5', 'classInternalId': '11', 'ascendancyInternalId': 'Druid2', 'secondaryAscendClassId': 'nil', 'nodes': '47359,16121,45319,51891,56933,10131,21984,11248,17584,50084,54521,51934,61056,4828,57513,26196,1506,24786,45632,32194,15775,4140,49976,50104,11825,2335,50558,25304,36379,59362,31977,27705,33722,12430,12462,51741,904,38493,57710,46882,3251,28446,49938,59093,47931,50423,63400,54984,28578,48773,2582,43281,32951,57821,17517,62677,16204,47976,33180,17711,56334,14446,61525,30808,30657,33824,7960,58312,32763,24721,65493,48116,11741,29959,16466,60269,50216,26135,17655,61421,24287,49357,25429,46989,46819,44669,43854,38537,8616,41394,40783,20467,39280,6891,61834,59538,40453,49497,50816,28022,55621,38103,33781,3567,30834,23364,13233,50498,31765,41753,60735,56265,21568,38463,62936,8831,29240,40399,61419,62523,5314,28002,34015,25503,46554,23382,19044,29009,25026,722,35535,1855,14267,10159,41838,45885,42253,43633,27068,17702,47168,27388,64299,54512,11838,23040,61403,38856,23244,14231,55048,39131,35831,6898,13407', 'masteryEffects': '', 'ascendClassId': '2'}
